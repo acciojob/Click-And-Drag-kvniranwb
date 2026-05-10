@@ -38,66 +38,51 @@
 const container = document.querySelector('.items');
 const items = document.querySelectorAll('.item');
 
-let activeItem = null;
-let offsetX = 0;
-let offsetY = 0;
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+let scrollLeft = 0;
+let scrollTop = 0;
 
-// scroll speed when dragging near edges
-const scrollSpeed = 15;
-
+// start drag ONLY when clicking an item
 items.forEach(item => {
   item.addEventListener('mousedown', (e) => {
-    activeItem = item;
+    isDragging = true;
 
-    const rect = item.getBoundingClientRect();
+    container.classList.add('active');
 
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
+    startX = e.pageX;
+    startY = e.pageY;
 
-    // make item float above others
-    item.style.position = 'absolute';
-    item.style.zIndex = 1000;
+    scrollLeft = container.scrollLeft;
+    scrollTop = container.scrollTop;
 
-    e.preventDefault();
+    e.preventDefault(); // prevents text selection
   });
 });
 
-document.addEventListener('mousemove', (e) => {
-  if (!activeItem) return;
+// IMPORTANT: attach to container (Cypress-safe)
+container.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
 
-  const containerRect = container.getBoundingClientRect();
+  const dx = e.pageX - startX;
+  const dy = e.pageY - startY;
 
-  // 1. Move the item with cursor
-  const x = e.clientX - offsetX;
-  const y = e.clientY - offsetY;
-
-  activeItem.style.left = x + 'px';
-  activeItem.style.top = y + 'px';
-
-  // 2. Auto-scroll container when dragging near edges
-  const edgeThreshold = 80;
-
-  // horizontal scroll
-  if (e.clientX > containerRect.right - edgeThreshold) {
-    container.scrollLeft += scrollSpeed;
-  }
-  if (e.clientX < containerRect.left + edgeThreshold) {
-    container.scrollLeft -= scrollSpeed;
-  }
-
-  // vertical scroll
-  if (e.clientY > containerRect.bottom - edgeThreshold) {
-    container.scrollTop += scrollSpeed;
-  }
-  if (e.clientY < containerRect.top + edgeThreshold) {
-    container.scrollTop -= scrollSpeed;
-  }
+  container.scrollLeft = scrollLeft - dx;
+  container.scrollTop = scrollTop - dy;
 });
 
-document.addEventListener('mouseup', () => {
-  activeItem = null;
+container.addEventListener('mouseup', () => {
+  isDragging = false;
+  container.classList.remove('active');
+});
+
+// safety fallback
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  container.classList.remove('active');
 });
 </script>
 
-  </body>
+</body>
 </html>
