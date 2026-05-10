@@ -35,8 +35,91 @@
   </div>
 
 <script>
-//Your code goes here 
-</script>
+const container = document.querySelector('.items');
+const items = Array.from(document.querySelectorAll('.item'));
+
+const ITEM_SIZE = 200;
+const GAP = 10;
+const STEP = ITEM_SIZE + GAP;
+
+let activeItem = null;
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+
+// Make container the positioning reference
+container.style.position = 'relative';
+
+// Convert items to absolute positioned grid
+function layoutItems() {
+  const cols = Math.max(1, Math.floor(container.clientWidth / STEP));
+
+  items.forEach((item, i) => {
+    if (item === activeItem) return; // don't reset dragged item
+
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+
+    item.style.position = 'absolute';
+    item.style.width = ITEM_SIZE + 'px';
+    item.style.height = ITEM_SIZE + 'px';
+
+    item.style.left = (col * STEP + 100) + 'px';
+    item.style.top = (row * STEP + 100) + 'px';
+
+    item.style.cursor = 'grab';
+  });
+}
+
+// Initial layout
+layoutItems();
+window.addEventListener('resize', layoutItems);
+
+items.forEach(item => {
+  item.addEventListener('mousedown', (e) => {
+    activeItem = item;
+    isDragging = false;
+
+    const rect = item.getBoundingClientRect();
+
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    item.style.zIndex = 1000;
+    item.style.cursor = 'grabbing';
+  });
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!activeItem) return;
+
+  isDragging = true;
+
+  const containerRect = container.getBoundingClientRect();
+
+  let x = e.clientX - containerRect.left - offsetX;
+  let y = e.clientY - containerRect.top - offsetY;
+
+  // Boundary constraints
+  const maxX = container.clientWidth - ITEM_SIZE;
+  const maxY = container.clientHeight - ITEM_SIZE;
+
+  x = Math.max(0, Math.min(x, maxX));
+  y = Math.max(0, Math.min(y, maxY));
+
+  activeItem.style.left = x + 'px';
+  activeItem.style.top = y + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  if (!activeItem) return;
+
+  activeItem.style.cursor = 'grab';
+  activeItem.style.zIndex = '';
+
+  activeItem = null;
+  isDragging = false;
+});</script>
 
   </body>
 </html>
