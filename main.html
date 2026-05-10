@@ -1,73 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Drag Scroll</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Click and Drag</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="items">
-  <div class="item">1</div>
-  <div class="item">2</div>
-  <div class="item">3</div>
-  <div class="item">4</div>
-  <div class="item">5</div>
-  <div class="item">6</div>
-  <div class="item">7</div>
-  <div class="item">8</div>
-  <div class="item">9</div>
-  <div class="item">10</div>
-  <div class="item">11</div>
-  <div class="item">12</div>
-  <div class="item">13</div>
-  <div class="item">14</div>
-  <div class="item">15</div>
-  <div class="item">16</div>
-  <div class="item">17</div>
-  <div class="item">18</div>
-  <div class="item">19</div>
-  <div class="item">20</div>
-  <div class="item">21</div>
-  <div class="item">22</div>
-  <div class="item">23</div>
-  <div class="item">24</div>
-  <div class="item">25</div>
-</div>
+  <div class="items">
+    <div class="item item1">01</div>
+    <div class="item item2">02</div>
+    <div class="item item3">03</div>
+    <div class="item item4">04</div>
+    <div class="item item5">05</div>
+    <div class="item item6">06</div>
+    <div class="item item7">07</div>
+    <div class="item item8">08</div>
+    <div class="item item9">09</div>
+    <div class="item item10">10</div>
+    <div class="item item11">11</div>
+    <div class="item item12">12</div>
+    <div class="item item13">13</div>
+    <div class="item item14">14</div>
+    <div class="item item15">15</div>
+    <div class="item item16">16</div>
+    <div class="item item17">17</div>
+    <div class="item item18">18</div>
+    <div class="item item19">19</div>
+    <div class="item item20">20</div>
+    <div class="item item21">21</div>
+    <div class="item item22">22</div>
+    <div class="item item23">23</div>
+    <div class="item item24">24</div>
+    <div class="item item25">25</div>
+  </div>
 
 <script>
-const slider = document.querySelector('.items');
+/* =========================
+   DRAG FUNCTIONALITY
+========================= */
 
-let isDown = false;
-let startX;
-let scrollLeft;
+const container = document.querySelector(".items");
+const items = document.querySelectorAll(".item");
 
-slider.addEventListener('mousedown', (e) => {
-  isDown = true;
-  startX = e.clientX;
-  scrollLeft = slider.scrollLeft;
+let activeItem = null;
+let offsetX = 0;
+let offsetY = 0;
+
+/* ---------- GRID LAYOUT ---------- */
+function layoutGrid() {
+  const cols = 5;
+  const gap = 20;
+  const size = 120;
+
+  items.forEach((item, index) => {
+    const row = Math.floor(index / cols);
+    const col = index % cols;
+
+    item.style.left = col * (size + gap) + "px";
+    item.style.top = row * (size + gap) + "px";
+  });
+}
+
+layoutGrid();
+
+/* ---------- MOUSE DOWN ---------- */
+items.forEach(item => {
+  item.addEventListener("mousedown", (e) => {
+    activeItem = item;
+
+    const rect = item.getBoundingClientRect();
+
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    item.style.zIndex = 1000;
+    item.style.cursor = "grabbing";
+  });
 });
 
-slider.addEventListener('mouseup', () => {
-  isDown = false;
+/* ---------- MOUSE MOVE ---------- */
+document.addEventListener("mousemove", (e) => {
+  if (!activeItem) return;
+
+  const containerRect = container.getBoundingClientRect();
+
+  let x = e.clientX - containerRect.left - offsetX;
+  let y = e.clientY - containerRect.top - offsetY;
+
+  const maxX = container.clientWidth - activeItem.offsetWidth;
+  const maxY = container.clientHeight - activeItem.offsetHeight;
+
+  // boundary constraints
+  x = Math.max(0, Math.min(x, maxX));
+  y = Math.max(0, Math.min(y, maxY));
+
+  activeItem.style.left = x + "px";
+  activeItem.style.top = y + "px";
 });
 
-slider.addEventListener('mouseleave', () => {
-  isDown = false;
-});
-
-slider.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
-
-  e.preventDefault();
-
-  // 🔥 CRITICAL FIX: force large movement regardless of Cypress delta
-  const x = e.clientX;
-
-  const walk = (x - startX);
-
-  // multiply heavily so even tiny Cypress movement works
-  slider.scrollLeft = scrollLeft - (walk * 20);
+/* ---------- MOUSE UP ---------- */
+document.addEventListener("mouseup", () => {
+  if (activeItem) {
+    activeItem.style.zIndex = 1;
+    activeItem.style.cursor = "grab";
+  }
+  activeItem = null;
 });
 </script>
 
