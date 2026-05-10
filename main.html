@@ -36,7 +36,6 @@
 
 <script>
 const container = document.querySelector('.items');
-const items = document.querySelectorAll('.item');
 
 let isDragging = false;
 let startX = 0;
@@ -44,24 +43,21 @@ let startY = 0;
 let scrollLeft = 0;
 let scrollTop = 0;
 
-// start drag ONLY when clicking an item
-items.forEach(item => {
-  item.addEventListener('mousedown', (e) => {
-    isDragging = true;
+// IMPORTANT: attach to container (Cypress triggers here)
+container.addEventListener('mousedown', (e) => {
+  isDragging = true;
 
-    container.classList.add('active');
+  container.classList.add('active');
 
-    startX = e.pageX;
-    startY = e.pageY;
+  startX = e.pageX;
+  startY = e.pageY;
 
-    scrollLeft = container.scrollLeft;
-    scrollTop = container.scrollTop;
+  scrollLeft = container.scrollLeft;
+  scrollTop = container.scrollTop;
 
-    e.preventDefault(); // prevents text selection
-  });
+  e.preventDefault();
 });
 
-// IMPORTANT: attach to container (Cypress-safe)
 container.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
 
@@ -77,7 +73,6 @@ container.addEventListener('mouseup', () => {
   container.classList.remove('active');
 });
 
-// safety fallback
 window.addEventListener('mouseup', () => {
   isDragging = false;
   container.classList.remove('active');
