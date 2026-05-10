@@ -16,16 +16,16 @@ body {
   align-items: center;
 }
 
-/* ===== SCROLL CONTAINER ===== */
+/* SCROLL CONTAINER */
 .items {
   width: 100%;
   height: 800px;
 
-  display: block;
-  white-space: nowrap;
-
   overflow-x: scroll;
   overflow-y: hidden;
+
+  white-space: nowrap;
+  display: block;
 
   border: 2px solid white;
   background: rgba(255,255,255,0.1);
@@ -34,15 +34,10 @@ body {
   user-select: none;
 }
 
-.items.active {
-  cursor: grabbing;
-}
-
-/* ===== FORCE OVERFLOW ===== */
+/* FORCE BIG OVERFLOW (this is the critical fix) */
 .item {
   display: inline-block;
-
-  width: 300px;
+  width: 500px;   /* IMPORTANT: large enough to GUARANTEE scroll */
   height: 100%;
 
   margin-right: 10px;
@@ -50,14 +45,7 @@ body {
   font-size: 80px;
   text-align: center;
   line-height: 800px;
-
-  color: rgba(0,0,0,0.2);
 }
 
-.item:nth-child(odd) {
-  background: tomato;
-}
-
-.item:nth-child(even) {
-  background: goldenrod;
-}
+.item:nth-child(odd) { background: tomato; }
+.item:nth-child(even) { background: goldenrod; }
