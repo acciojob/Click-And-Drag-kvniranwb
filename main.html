@@ -1,82 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Click and Drag</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Drag Scroll</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="items">
-    <div class="item item1">01</div>
-    <div class="item item2">02</div>
-    <div class="item item3">03</div>
-    <div class="item item4">04</div>
-    <div class="item item5">05</div>
-    <div class="item item6">06</div>
-    <div class="item item7">07</div>
-    <div class="item item8">08</div>
-    <div class="item item9">09</div>
-    <div class="item item10">10</div>
-    <div class="item item11">11</div>
-    <div class="item item12">12</div>
-    <div class="item item13">13</div>
-    <div class="item item14">14</div>
-    <div class="item item15">15</div>
-    <div class="item item16">16</div>
-    <div class="item item17">17</div>
-    <div class="item item18">18</div>
-    <div class="item item19">19</div>
-    <div class="item item20">20</div>
-    <div class="item item21">21</div>
-    <div class="item item22">22</div>
-    <div class="item item23">23</div>
-    <div class="item item24">24</div>
-    <div class="item item25">25</div>
-  </div>
+
+<div class="items">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+  <div class="item">4</div>
+  <div class="item">5</div>
+  <div class="item">6</div>
+  <div class="item">7</div>
+  <div class="item">8</div>
+  <div class="item">9</div>
+  <div class="item">10</div>
+  <div class="item">11</div>
+  <div class="item">12</div>
+  <div class="item">13</div>
+  <div class="item">14</div>
+  <div class="item">15</div>
+  <div class="item">16</div>
+  <div class="item">17</div>
+  <div class="item">18</div>
+  <div class="item">19</div>
+  <div class="item">20</div>
+  <div class="item">21</div>
+  <div class="item">22</div>
+  <div class="item">23</div>
+  <div class="item">24</div>
+  <div class="item">25</div>
+</div>
 
 <script>
-const container = document.querySelector('.items');
+<script>
+        const items = document.querySelector('.items');
+        let isMouseDown = false;
+        let startX, scrollLeft;
 
-let isDragging = false;
-let startX = 0;
-let startY = 0;
-let scrollLeft = 0;
-let scrollTop = 0;
+        items.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            items.classList.add('active');
+            startX = e.pageX - items.offsetLeft;
+            scrollLeft = items.scrollLeft;
+        });
 
-// IMPORTANT: attach to container (Cypress triggers here)
-container.addEventListener('mousedown', (e) => {
-  isDragging = true;
+        items.addEventListener('mouseleave', () => {
+            isMouseDown = false;
+            items.classList.remove('active');
+        });
 
-  container.classList.add('active');
+        items.addEventListener('mouseup', () => {
+            isMouseDown = false;
+            items.classList.remove('active');
+        });
 
-  startX = e.pageX;
-  startY = e.pageY;
-
-  scrollLeft = container.scrollLeft;
-  scrollTop = container.scrollTop;
-
-  e.preventDefault();
-});
-
-container.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-
-  const dx = e.pageX - startX;
-  const dy = e.pageY - startY;
-
-  container.scrollLeft = scrollLeft - dx;
-  container.scrollTop = scrollTop - dy;
-});
-
-container.addEventListener('mouseup', () => {
-  isDragging = false;
-  container.classList.remove('active');
-});
-
-window.addEventListener('mouseup', () => {
-  isDragging = false;
-  container.classList.remove('active');
-});
+        items.addEventListener('mousemove', (e) => {
+            if (!isMouseDown) return;
+            e.preventDefault();
+            const x = e.pageX - items.offsetLeft;
+            const scroll = (x - startX) * 3;
+            items.scrollLeft = scrollLeft - scroll;
+        });
+    </script>
 </script>
 
 </body>
