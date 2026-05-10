@@ -36,7 +36,6 @@
   <div class="item">24</div>
   <div class="item">25</div>
 </div>
-
 <script>
 const slider = document.querySelector('.items');
 
@@ -44,44 +43,34 @@ let isDown = false;
 let startX = 0;
 let scrollLeft = 0;
 
-function startDrag(e) {
+slider.addEventListener('pointerdown', (e) => {
   isDown = true;
   slider.classList.add('active');
 
-  startX = (e.pageX || e.touches?.[0].pageX) - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
-}
+  slider.setPointerCapture(e.pointerId);
 
-function stopDrag() {
+  startX = e.pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
+});
+
+slider.addEventListener('pointerup', () => {
   isDown = false;
   slider.classList.remove('active');
-}
+});
 
-function moveDrag(e) {
+slider.addEventListener('pointercancel', () => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+
+slider.addEventListener('pointermove', (e) => {
   if (!isDown) return;
 
-  e.preventDefault();
-
-  const x = (e.pageX || (e.touches ? e.touches[0].pageX : 0)) - slider.offsetLeft;
+  const x = e.pageX - slider.offsetLeft;
   const walk = (x - startX) * 2;
 
   slider.scrollLeft = scrollLeft - walk;
-}
-
-// Mouse events
-slider.addEventListener('mousedown', startDrag);
-slider.addEventListener('mouseleave', stopDrag);
-slider.addEventListener('mouseup', stopDrag);
-slider.addEventListener('mousemove', moveDrag);
-
-// IMPORTANT: document-level handlers (fix Cypress issue)
-document.addEventListener('mouseup', stopDrag);
-document.addEventListener('mousemove', moveDrag);
-
-// Touch support (safe, optional but good)
-slider.addEventListener('touchstart', startDrag);
-slider.addEventListener('touchend', stopDrag);
-slider.addEventListener('touchmove', moveDrag);
+});
 </script>
 
 </body>
