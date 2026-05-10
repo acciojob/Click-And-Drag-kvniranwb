@@ -1,42 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Drag Scroll</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Click and Drag</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="items">
+    <div class="item item1">01</div>
+    <div class="item item2">02</div>
+    <div class="item item3">03</div>
+    <div class="item item4">04</div>
+    <div class="item item5">05</div>
+    <div class="item item6">06</div>
+    <div class="item item7">07</div>
+    <div class="item item8">08</div>
+    <div class="item item9">09</div>
+    <div class="item item10">10</div>
+    <div class="item item11">11</div>
+    <div class="item item12">12</div>
+    <div class="item item13">13</div>
+    <div class="item item14">14</div>
+    <div class="item item15">15</div>
+    <div class="item item16">16</div>
+    <div class="item item17">17</div>
+    <div class="item item18">18</div>
+    <div class="item item19">19</div>
+    <div class="item item20">20</div>
+    <div class="item item21">21</div>
+    <div class="item item22">22</div>
+    <div class="item item23">23</div>
+    <div class="item item24">24</div>
+    <div class="item item25">25</div>
+  </div>
 
-<div class="items">
-  <div class="item">1</div>
-  <div class="item">2</div>
-  <div class="item">3</div>
-  <div class="item">4</div>
-  <div class="item">5</div>
-  <div class="item">6</div>
-  <div class="item">7</div>
-  <div class="item">8</div>
-  <div class="item">9</div>
-  <div class="item">10</div>
-  <div class="item">11</div>
-  <div class="item">12</div>
-  <div class="item">13</div>
-  <div class="item">14</div>
-  <div class="item">15</div>
-  <div class="item">16</div>
-  <div class="item">17</div>
-  <div class="item">18</div>
-  <div class="item">19</div>
-  <div class="item">20</div>
-  <div class="item">21</div>
-  <div class="item">22</div>
-  <div class="item">23</div>
-  <div class="item">24</div>
-  <div class="item">25</div>
-</div>
 
-<script>
-<script>
+<!-- <!-- //Your code goes here  -->
+<!-- 	    <script>
+        var dragItem = null;
+        var startX, startY, offsetX, offsetY;
+
+        // Function to handle the start of the drag
+        function dragStart(e) {
+            dragItem = this;
+            startX = e.clientX;
+            startY = e.clientY;
+            offsetX = 0;
+            offsetY = 0;
+            dragItem.classList.add('active');
+        }
+
+        // Function to handle the drag movement
+        function drag(e) {
+            if (dragItem) {
+                e.preventDefault();
+                offsetX = e.clientX - startX;
+                offsetY = e.clientY - startY;
+                startX = e.clientX;
+                startY = e.clientY;
+                dragItem.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            }
+        }
+
+        // Function to handle the end of the drag
+        function dragEnd(e) {
+            if (dragItem) {
+                dragItem.style.transform = `translate(0, 0)`;
+                dragItem.classList.remove('active');
+                dragItem = null;
+            }
+        }
+
+        // Attach event listeners to each item
+        var items = document.getElementsByClassName('item');
+        for (var i = 0; i < items.length; i++) {
+            items[i].addEventListener('mousedown', dragStart);
+            items[i].addEventListener('mousemove', drag);
+            items[i].addEventListener('mouseup', dragEnd);
+        }
+    </script> -->
+ -->
+
+	  <script>
         const items = document.querySelector('.items');
         let isMouseDown = false;
         let startX, scrollLeft;
@@ -66,7 +111,5 @@
             items.scrollLeft = scrollLeft - scroll;
         });
     </script>
-</script>
-
-</body>
+  </body>
 </html>
