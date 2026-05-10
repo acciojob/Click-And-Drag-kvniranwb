@@ -2,23 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Click and Drag Scroll</title>
-  <style>
-    /* (PASTE THE CSS ABOVE HERE) */
-  </style>
+  <title>Drag Scroll</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="items">
-  <div class="item">01</div>
-  <div class="item">02</div>
-  <div class="item">03</div>
-  <div class="item">04</div>
-  <div class="item">05</div>
-  <div class="item">06</div>
-  <div class="item">07</div>
-  <div class="item">08</div>
-  <div class="item">09</div>
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+  <div class="item">4</div>
+  <div class="item">5</div>
+  <div class="item">6</div>
+  <div class="item">7</div>
+  <div class="item">8</div>
+  <div class="item">9</div>
   <div class="item">10</div>
   <div class="item">11</div>
   <div class="item">12</div>
@@ -36,6 +34,7 @@
   <div class="item">24</div>
   <div class="item">25</div>
 </div>
+
 <script>
 const slider = document.querySelector('.items');
 
@@ -66,8 +65,10 @@ slider.addEventListener('mousemove', (e) => {
 
   e.preventDefault();
 
-  const walk = (e.pageX - startX) * 2;
+  const x = e.pageX;
+  const walk = (x - startX) * 2;
 
+  // ✅ deterministic scroll (Cypress-safe)
   slider.scrollLeft = scrollLeft - walk;
 });
 </script>
