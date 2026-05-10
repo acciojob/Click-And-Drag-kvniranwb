@@ -1,56 +1,34 @@
-// Your code here.const container = document.getElementById('container');
-const items = document.querySelectorAll('.item');
+const slider = document.querySelector('.items');
 
-let activeItem = null;
-let offsetX = 0;
-let offsetY = 0;
-let isDragging = false;
+let isDown = false;
+let startX;
+let scrollLeft;
 
-items.forEach(item => {
-  item.addEventListener('mousedown', (e) => {
-    activeItem = item;
-    isDragging = true;
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
+  slider.classList.add('active');
 
-    const containerRect = container.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-
-    offsetX = e.clientX - itemRect.left;
-    offsetY = e.clientY - itemRect.top;
-
-    item.classList.add('dragging');
-
-    item.style.left = (itemRect.left - containerRect.left) + 'px';
-    item.style.top = (itemRect.top - containerRect.top) + 'px';
-
-    container.appendChild(item);
-  });
+  startX = e.pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
 });
 
-document.addEventListener('mousemove', (e) => {
-  if (!isDragging || !activeItem) return;
-
-  const containerRect = container.getBoundingClientRect();
-
-  let x = e.clientX - containerRect.left - offsetX;
-  let y = e.clientY - containerRect.top - offsetY;
-
-  const itemRect = activeItem.getBoundingClientRect();
-
-  const maxX = container.clientWidth - itemRect.width;
-  const maxY = container.clientHeight - itemRect.height;
-
-  // boundary clamp
-  x = Math.max(0, Math.min(x, maxX));
-  y = Math.max(0, Math.min(y, maxY));
-
-  activeItem.style.left = x + 'px';
-  activeItem.style.top = y + 'px';
+slider.addEventListener('mouseleave', () => {
+  isDown = false;
+  slider.classList.remove('active');
 });
 
-document.addEventListener('mouseup', () => {
-  if (activeItem) {
-    activeItem.classList.remove('dragging');
-  }
-  activeItem = null;
-  isDragging = false;
+slider.addEventListener('mouseup', () => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return;
+
+  e.preventDefault();
+
+  const x = e.pageX - slider.offsetLeft;
+  const walk = (x - startX) * 2; // scroll speed multiplier
+
+  slider.scrollLeft = scrollLeft - walk;
 });
