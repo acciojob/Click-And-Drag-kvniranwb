@@ -34,87 +34,43 @@
     <div class="item item25">25</div>
   </div>
 
+  <script>
+    const slider = document.querySelector('.items');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
 
-<!-- <!-- //Your code goes here  -->
-<!-- 	    <script>
-        var dragItem = null;
-        var startX, startY, offsetX, offsetY;
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      // Calculate start position relative to the slider container
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
 
-        // Function to handle the start of the drag
-        function dragStart(e) {
-            dragItem = this;
-            startX = e.clientX;
-            startY = e.clientY;
-            offsetX = 0;
-            offsetY = 0;
-            dragItem.classList.add('active');
-        }
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
 
-        // Function to handle the drag movement
-        function drag(e) {
-            if (dragItem) {
-                e.preventDefault();
-                offsetX = e.clientX - startX;
-                offsetY = e.clientY - startY;
-                startX = e.clientX;
-                startY = e.clientY;
-                dragItem.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-            }
-        }
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
 
-        // Function to handle the end of the drag
-        function dragEnd(e) {
-            if (dragItem) {
-                dragItem.style.transform = `translate(0, 0)`;
-                dragItem.classList.remove('active');
-                dragItem = null;
-            }
-        }
-
-        // Attach event listeners to each item
-        var items = document.getElementsByClassName('item');
-        for (var i = 0; i < items.length; i++) {
-            items[i].addEventListener('mousedown', dragStart);
-            items[i].addEventListener('mousemove', drag);
-            items[i].addEventListener('mouseup', dragEnd);
-        }
-    </script> -->
- 
-
-	  <script>
-        const items = document.querySelector('.items');
-let isMouseDown = false;
-let startX, scrollLeft;
-
-items.addEventListener('mousedown', (e) => {
-    isMouseDown = true;
-    items.classList.add('active');
-    // Use pageX for consistency
-    startX = e.pageX - items.offsetLeft;
-    scrollLeft = items.scrollLeft;
-});
-
-items.addEventListener('mouseleave', () => {
-    isMouseDown = false;
-    items.classList.remove('active');
-});
-
-items.addEventListener('mouseup', () => {
-    isMouseDown = false;
-    items.classList.remove('active');
-});
-
-items.addEventListener('mousemove', (e) => {
-    if (!isMouseDown) return;
-    
-    e.preventDefault();
-    // Current cursor position
-    const x = e.pageX - items.offsetLeft;
-    // Calculate how far we moved from the start
-    const walk = (x - startX) * 3; 
-    // We subtract the walk from the initial scroll position
-    items.scrollLeft = scrollLeft - walk;
-});
-    </script>
-  </body>
+    slider.addEventListener('mousemove', (e) => {
+      if (!isDown) return; // Stop the function from running if mouse is not down
+      e.preventDefault();
+      
+      // Calculate current position relative to slider container
+      const x = e.pageX - slider.offsetLeft;
+      
+      // 'walk' is the distance moved multiplied by a scroll speed factor
+      const walk = (x - startX) * 3; 
+      
+      // Update the scroll position
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  </script>
+</body>
 </html>
